@@ -45,17 +45,17 @@
     "exit-a",
     "exit-b"
   ],
-  "start_time": 1777811615.5875797,
-  "end_time": 1777811615.9097352,
-  "duration": 0.3221554756164551,
+  "start_time": 1777811927.9931464,
+  "end_time": 1777811928.312429,
+  "duration": 0.31928253173828125,
   "node_traces": [
     {
       "node_id": "entry-a",
       "task": "research entry-a",
       "order": 0,
-      "start_time": 1777811615.5876455,
-      "end_time": 1777811615.692214,
-      "duration": 0.1045684814453125,
+      "start_time": 1777811927.9932125,
+      "end_time": 1777811928.0940735,
+      "duration": 0.1008610725402832,
       "result": {
         "research": "Researched {'node_id': 'entry-a', 'task': 'research entry-a', 'order': 0}",
         "agent": "ResearcherAgent"
@@ -65,9 +65,9 @@
       "node_id": "entry-b",
       "task": "research entry-b",
       "order": 1,
-      "start_time": 1777811615.5876606,
-      "end_time": 1777811615.692237,
-      "duration": 0.10457634925842285,
+      "start_time": 1777811927.9932275,
+      "end_time": 1777811928.0941,
+      "duration": 0.10087251663208008,
       "result": {
         "research": "Researched {'node_id': 'entry-b', 'task': 'research entry-b', 'order': 1}",
         "agent": "ResearcherAgent"
@@ -77,9 +77,9 @@
       "node_id": "mid-a",
       "task": "research mid-a",
       "order": 2,
-      "start_time": 1777811615.6923926,
-      "end_time": 1777811615.8013425,
-      "duration": 0.10894989967346191,
+      "start_time": 1777811928.0942662,
+      "end_time": 1777811928.2025065,
+      "duration": 0.10824036598205566,
       "result": {
         "research": "Researched {'node_id': 'mid-a', 'task': 'research mid-a', 'order': 2}",
         "agent": "ResearcherAgent"
@@ -89,9 +89,9 @@
       "node_id": "mid-b",
       "task": "research mid-b",
       "order": 3,
-      "start_time": 1777811615.6924314,
-      "end_time": 1777811615.8013587,
-      "duration": 0.10892724990844727,
+      "start_time": 1777811928.0942988,
+      "end_time": 1777811928.2025273,
+      "duration": 0.10822844505310059,
       "result": {
         "research": "Researched {'node_id': 'mid-b', 'task': 'research mid-b', 'order': 3}",
         "agent": "ResearcherAgent"
@@ -101,9 +101,9 @@
       "node_id": "mid-c",
       "task": "research mid-c",
       "order": 4,
-      "start_time": 1777811615.692455,
-      "end_time": 1777811615.8013666,
-      "duration": 0.10891151428222656,
+      "start_time": 1777811928.0943155,
+      "end_time": 1777811928.20254,
+      "duration": 0.10822439193725586,
       "result": {
         "research": "Researched {'node_id': 'mid-c', 'task': 'research mid-c', 'order': 4}",
         "agent": "ResearcherAgent"
@@ -113,9 +113,9 @@
       "node_id": "exit-a",
       "task": "research exit-a",
       "order": 5,
-      "start_time": 1777811615.8014703,
-      "end_time": 1777811615.9096804,
-      "duration": 0.10821008682250977,
+      "start_time": 1777811928.2026827,
+      "end_time": 1777811928.312336,
+      "duration": 0.10965323448181152,
       "result": {
         "research": "Researched {'node_id': 'exit-a', 'task': 'research exit-a', 'order': 5}",
         "agent": "ResearcherAgent"
@@ -125,14 +125,14 @@
       "node_id": "exit-b",
       "task": "research exit-b",
       "order": 6,
-      "start_time": 1777811615.8014915,
-      "end_time": 1777811615.9096997,
-      "duration": 0.10820817947387695,
+      "start_time": 1777811928.2027116,
+      "end_time": 1777811928.312374,
+      "duration": 0.10966253280639648,
       "result": {
         "research": "Researched {'node_id': 'exit-b', 'task': 'research exit-b', 'order': 6}",
         "agent": "ResearcherAgent"
       }
     }
   ],
-  "critical_path_duration": 0.3217284679412842
+  "critical_path_duration": 0.3187594413757324
 }

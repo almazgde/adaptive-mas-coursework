@@ -29,17 +29,17 @@
     "synthesize",
     "aggregate-coordinator"
   ],
-  "start_time": 1777811615.9152877,
-  "end_time": 1777811616.3480499,
-  "duration": 0.43276214599609375,
+  "start_time": 1777811928.3176737,
+  "end_time": 1777811928.749155,
+  "duration": 0.43148136138916016,
   "node_traces": [
     {
       "node_id": "coordinator",
       "task": "plan coordinator",
       "order": 0,
-      "start_time": 1777811615.915303,
-      "end_time": 1777811616.019595,
-      "duration": 0.10429191589355469,
+      "start_time": 1777811928.31769,
+      "end_time": 1777811928.4223151,
+      "duration": 0.10462522506713867,
       "result": {
         "plan": "Planned for {'node_id': 'coordinator', 'task': 'plan coordinator', 'order': 0}",
         "agent": "PlannerAgent"
@@ -49,9 +49,9 @@
       "node_id": "research-1",
       "task": "research node 1",
       "order": 1,
-      "start_time": 1777811616.0197191,
-      "end_time": 1777811616.1290774,
-      "duration": 0.10935831069946289,
+      "start_time": 1777811928.422464,
+      "end_time": 1777811928.5311604,
+      "duration": 0.10869646072387695,
       "result": {
         "research": "Researched {'node_id': 'research-1', 'task': 'research node 1', 'order': 1}",
         "agent": "ResearcherAgent"
@@ -61,9 +61,9 @@
       "node_id": "research-2",
       "task": "research node 2",
       "order": 3,
-      "start_time": 1777811616.0197513,
-      "end_time": 1777811616.1291194,
-      "duration": 0.10936808586120605,
+      "start_time": 1777811928.4225016,
+      "end_time": 1777811928.531243,
+      "duration": 0.10874152183532715,
       "result": {
         "research": "Researched {'node_id': 'research-2', 'task': 'research node 2', 'order': 3}",
         "agent": "ResearcherAgent"
@@ -73,9 +73,9 @@
       "node_id": "critique",
       "task": "critic node",
       "order": 2,
-      "start_time": 1777811616.1290917,
-      "end_time": 1777811616.238432,
-      "duration": 0.10934019088745117,
+      "start_time": 1777811928.5311878,
+      "end_time": 1777811928.6399655,
+      "duration": 0.10877776145935059,
       "result": {
         "critique": "Critiqued {'node_id': 'critique', 'task': 'critic node', 'order': 2}",
         "agent": "CriticAgent"
@@ -85,9 +85,9 @@
       "node_id": "synthesize",
       "task": "synthesize node",
       "order": 4,
-      "start_time": 1777811616.1291242,
-      "end_time": 1777811616.2384562,
-      "duration": 0.10933208465576172,
+      "start_time": 1777811928.5312548,
+      "end_time": 1777811928.639989,
+      "duration": 0.108734130859375,
       "result": {
         "synthesis": "Synthesized {'node_id': 'synthesize', 'task': 'synthesize node', 'order': 4}",
         "agent": "SynthesizerAgent"
@@ -97,14 +97,14 @@
       "node_id": "aggregate-coordinator",
       "task": "aggregate-coordinator",
       "order": 5,
-      "start_time": 1777811616.23857,
-      "end_time": 1777811616.348028,
-      "duration": 0.10945796966552734,
+      "start_time": 1777811928.6401007,
+      "end_time": 1777811928.7491448,
+      "duration": 0.10904407501220703,
       "result": {
         "synthesis": "Synthesized {'node_id': 'aggregate-coordinator', 'task': 'aggregate-coordinator', 'order': 5}",
         "agent": "SynthesizerAgent"
       }
     }
   ],
-  "critical_path_duration": 0.32299208641052246
+  "critical_path_duration": 0.3221008777618408
 }
