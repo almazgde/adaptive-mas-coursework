@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List, Dict, Any
 import networkx as nx
 from ..dag.dag import DAG
+from ..metrics.graph_metrics import GraphMetrics
 
 
 class TopologyType(Enum):
@@ -26,6 +27,36 @@ class TopologySelector:
             return TopologySelector._hybrid_topology(dag)
         else:
             raise ValueError(f"Unknown topology type: {topology_type}")
+
+    @staticmethod
+    def select_adaptive_topology_type(dag: DAG) -> TopologyType:
+        """Choose a topology from graph metrics for adaptive orchestration."""
+        node_count = len(dag.graph.nodes)
+        if node_count <= 1:
+            return TopologyType.SEQUENTIAL
+
+        depth = GraphMetrics.graph_depth(dag)
+        width = GraphMetrics.parallel_width(dag)
+        density = GraphMetrics.graph_density(dag)
+        max_degree = GraphMetrics.max_degree(dag)
+        depth_ratio = depth / node_count
+        width_ratio = width / node_count
+
+        if depth_ratio >= 0.65:
+            return TopologyType.SEQUENTIAL
+        if max_degree >= max(4, node_count // 3) and depth_ratio < 0.55:
+            return TopologyType.HIERARCHICAL
+        if width_ratio >= 0.45 and density <= 0.25:
+            return TopologyType.PARALLEL
+        return TopologyType.HYBRID
+
+    @staticmethod
+    def select_adaptive_topology(dag: DAG) -> Dict[str, Any]:
+        """Select and materialize a topology dynamically from DAG metrics."""
+        topology_type = TopologySelector.select_adaptive_topology_type(dag)
+        topology = TopologySelector.select_topology(dag, topology_type)
+        topology["adaptive"] = True
+        return topology
 
     @staticmethod
     def _sequential_topology(dag: DAG) -> Dict[str, Any]:

@@ -75,3 +75,30 @@ Generated files:
 - `results/execution_trace.json`
 - `results/scenario_<name>_<topology>_trace.json`
 - `logs/execution_metrics.json`
+
+## Stage 3: Experimental Research Framework
+
+Stage 3 adds a synthetic benchmark framework for comparing static and adaptive orchestration strategies without real LLM APIs.
+
+Run the benchmark suite:
+
+```bash
+python run_benchmarks.py
+```
+
+Generate plots:
+
+```bash
+python visualize_results.py
+```
+
+Generated files:
+- `results/benchmark_results.csv`
+- `results/benchmark_summary.csv`
+- `results/latency_comparison.png`
+- `results/topology_efficiency.png`
+- `results/adaptive_vs_static.png`
+- `results/critical_path_impact.png`
+- `results/graph_<graph_type>.png`
+
+The benchmark suite includes wide sparse, deep dependency, layered, and centralized coordinator task graphs. Each graph is run 10 times against static sequential, parallel, hierarchical, and hybrid strategies, plus an adaptive strategy selected from DAG metrics.
