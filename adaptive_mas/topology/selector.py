@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List, Dict, Any
+import networkx as nx
 from ..dag.dag import DAG
 
 
@@ -15,7 +16,6 @@ class TopologySelector:
 
     @staticmethod
     def select_topology(dag: DAG, topology_type: TopologyType) -> Dict[str, Any]:
-        """Select and return the topology configuration."""
         if topology_type == TopologyType.SEQUENTIAL:
             return TopologySelector._sequential_topology(dag)
         elif topology_type == TopologyType.PARALLEL:
@@ -29,39 +29,76 @@ class TopologySelector:
 
     @staticmethod
     def _sequential_topology(dag: DAG) -> Dict[str, Any]:
-        """Sequential execution: nodes executed one after another."""
         order = dag.topological_sort()
         return {
             "type": "sequential",
             "execution_order": order,
-            "parallel_groups": [[node] for node in order]
+            "parallel_groups": [[node] for node in order],
         }
 
     @staticmethod
     def _parallel_topology(dag: DAG) -> Dict[str, Any]:
-        """Parallel execution: all independent nodes executed simultaneously."""
         levels = {}
         for node in dag.topological_sort():
             pred_levels = [levels[pred] for pred in dag.graph.predecessors(node)]
             levels[node] = max(pred_levels) + 1 if pred_levels else 1
-        max_level = max(levels.values())
+
+        max_level = max(levels.values(), default=0)
         parallel_groups = [[] for _ in range(max_level)]
         for node, level in levels.items():
             parallel_groups[level - 1].append(node)
+
         return {
             "type": "parallel",
             "execution_order": dag.topological_sort(),
-            "parallel_groups": parallel_groups
+            "parallel_groups": parallel_groups,
+            "levels": levels,
         }
 
     @staticmethod
     def _hierarchical_topology(dag: DAG) -> Dict[str, Any]:
-        """Hierarchical: organize nodes in a tree-like structure."""
-        # Simplified: group by levels
-        return TopologySelector._parallel_topology(dag)
+        if not dag.graph.nodes:
+            return {"type": "hierarchical", "execution_order": [], "coordinator": None, "subtask_groups": []}
+
+        candidate = max(dag.graph.nodes, key=lambda node: dag.graph.out_degree(node) + dag.graph.in_degree(node))
+        if dag.graph.out_degree(candidate) == 0:
+            candidate = dag.topological_sort()[0]
+
+        children = list(dag.graph.successors(candidate))
+        subtask_groups: List[List[str]] = []
+        assigned = set()
+        for child in children:
+            group = [child]
+            descendants = sorted(nx.descendants(dag.graph, child))
+            for descendant in descendants:
+                if descendant not in assigned and descendant != candidate:
+                    group.append(descendant)
+                    assigned.add(descendant)
+            subtask_groups.append(group)
+
+        execution_order = [candidate] + [node for group in subtask_groups for node in group]
+        return {
+            "type": "hierarchical",
+            "execution_order": execution_order,
+            "coordinator": candidate,
+            "subtask_groups": subtask_groups,
+        }
 
     @staticmethod
     def _hybrid_topology(dag: DAG) -> Dict[str, Any]:
-        """Hybrid: combination of sequential and parallel."""
-        # For now, same as parallel
-        return TopologySelector._parallel_topology(dag)
+        levels = {}
+        for node in dag.topological_sort():
+            pred_levels = [levels[pred] for pred in dag.graph.predecessors(node)]
+            levels[node] = max(pred_levels) + 1 if pred_levels else 1
+
+        max_level = max(levels.values(), default=0)
+        layers = [[] for _ in range(max_level)]
+        for node, level in levels.items():
+            layers[level - 1].append(node)
+
+        return {
+            "type": "hybrid",
+            "execution_order": dag.topological_sort(),
+            "layers": layers,
+            "levels": levels,
+        }

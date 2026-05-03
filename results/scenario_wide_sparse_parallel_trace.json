@@ -1,0 +1,120 @@
+{
+  "topology_type": "parallel",
+  "topology_config": {
+    "type": "parallel",
+    "execution_order": [
+      "root",
+      "leaf-1",
+      "leaf-2",
+      "leaf-3",
+      "leaf-4",
+      "leaf-5"
+    ],
+    "parallel_groups": [
+      [
+        "root"
+      ],
+      [
+        "leaf-1",
+        "leaf-2",
+        "leaf-3",
+        "leaf-4",
+        "leaf-5"
+      ]
+    ],
+    "levels": {
+      "root": 1,
+      "leaf-1": 2,
+      "leaf-2": 2,
+      "leaf-3": 2,
+      "leaf-4": 2,
+      "leaf-5": 2
+    }
+  },
+  "execution_order": [
+    "root",
+    "leaf-1",
+    "leaf-2",
+    "leaf-3",
+    "leaf-4",
+    "leaf-5"
+  ],
+  "start_time": 1777811614.5973072,
+  "end_time": 1777811614.8218694,
+  "duration": 0.2245621681213379,
+  "node_traces": [
+    {
+      "node_id": "root",
+      "task": "plan root",
+      "order": 0,
+      "start_time": 1777811614.5973992,
+      "end_time": 1777811614.711282,
+      "duration": 0.11388278007507324,
+      "result": {
+        "plan": "Planned for {'node_id': 'root', 'task': 'plan root', 'order': 0}",
+        "agent": "PlannerAgent"
+      }
+    },
+    {
+      "node_id": "leaf-1",
+      "task": "research leaf 1",
+      "order": 1,
+      "start_time": 1777811614.7113972,
+      "end_time": 1777811614.8217292,
+      "duration": 0.11033201217651367,
+      "result": {
+        "research": "Researched {'node_id': 'leaf-1', 'task': 'research leaf 1', 'order': 1}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "leaf-2",
+      "task": "research leaf 2",
+      "order": 2,
+      "start_time": 1777811614.7114167,
+      "end_time": 1777811614.821756,
+      "duration": 0.11033916473388672,
+      "result": {
+        "research": "Researched {'node_id': 'leaf-2', 'task': 'research leaf 2', 'order': 2}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "leaf-3",
+      "task": "research leaf 3",
+      "order": 3,
+      "start_time": 1777811614.711426,
+      "end_time": 1777811614.8217697,
+      "duration": 0.11034369468688965,
+      "result": {
+        "research": "Researched {'node_id': 'leaf-3', 'task': 'research leaf 3', 'order': 3}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "leaf-4",
+      "task": "research leaf 4",
+      "order": 4,
+      "start_time": 1777811614.7114322,
+      "end_time": 1777811614.8217804,
+      "duration": 0.11034822463989258,
+      "result": {
+        "research": "Researched {'node_id': 'leaf-4', 'task': 'research leaf 4', 'order': 4}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "leaf-5",
+      "task": "research leaf 5",
+      "order": 5,
+      "start_time": 1777811614.711438,
+      "end_time": 1777811614.8217916,
+      "duration": 0.11035370826721191,
+      "result": {
+        "research": "Researched {'node_id': 'leaf-5', 'task': 'research leaf 5', 'order': 5}",
+        "agent": "ResearcherAgent"
+      }
+    }
+  ],
+  "critical_path_duration": 0.22423648834228516
+}

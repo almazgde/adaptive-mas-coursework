@@ -1,0 +1,138 @@
+{
+  "topology_type": "hybrid",
+  "topology_config": {
+    "type": "hybrid",
+    "execution_order": [
+      "entry-a",
+      "entry-b",
+      "mid-a",
+      "mid-b",
+      "mid-c",
+      "exit-a",
+      "exit-b"
+    ],
+    "layers": [
+      [
+        "entry-a",
+        "entry-b"
+      ],
+      [
+        "mid-a",
+        "mid-b",
+        "mid-c"
+      ],
+      [
+        "exit-a",
+        "exit-b"
+      ]
+    ],
+    "levels": {
+      "entry-a": 1,
+      "entry-b": 1,
+      "mid-a": 2,
+      "mid-b": 2,
+      "mid-c": 2,
+      "exit-a": 3,
+      "exit-b": 3
+    }
+  },
+  "execution_order": [
+    "entry-a",
+    "entry-b",
+    "mid-a",
+    "mid-b",
+    "mid-c",
+    "exit-a",
+    "exit-b"
+  ],
+  "start_time": 1777811615.5875797,
+  "end_time": 1777811615.9097352,
+  "duration": 0.3221554756164551,
+  "node_traces": [
+    {
+      "node_id": "entry-a",
+      "task": "research entry-a",
+      "order": 0,
+      "start_time": 1777811615.5876455,
+      "end_time": 1777811615.692214,
+      "duration": 0.1045684814453125,
+      "result": {
+        "research": "Researched {'node_id': 'entry-a', 'task': 'research entry-a', 'order': 0}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "entry-b",
+      "task": "research entry-b",
+      "order": 1,
+      "start_time": 1777811615.5876606,
+      "end_time": 1777811615.692237,
+      "duration": 0.10457634925842285,
+      "result": {
+        "research": "Researched {'node_id': 'entry-b', 'task': 'research entry-b', 'order': 1}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "mid-a",
+      "task": "research mid-a",
+      "order": 2,
+      "start_time": 1777811615.6923926,
+      "end_time": 1777811615.8013425,
+      "duration": 0.10894989967346191,
+      "result": {
+        "research": "Researched {'node_id': 'mid-a', 'task': 'research mid-a', 'order': 2}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "mid-b",
+      "task": "research mid-b",
+      "order": 3,
+      "start_time": 1777811615.6924314,
+      "end_time": 1777811615.8013587,
+      "duration": 0.10892724990844727,
+      "result": {
+        "research": "Researched {'node_id': 'mid-b', 'task': 'research mid-b', 'order': 3}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "mid-c",
+      "task": "research mid-c",
+      "order": 4,
+      "start_time": 1777811615.692455,
+      "end_time": 1777811615.8013666,
+      "duration": 0.10891151428222656,
+      "result": {
+        "research": "Researched {'node_id': 'mid-c', 'task': 'research mid-c', 'order': 4}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "exit-a",
+      "task": "research exit-a",
+      "order": 5,
+      "start_time": 1777811615.8014703,
+      "end_time": 1777811615.9096804,
+      "duration": 0.10821008682250977,
+      "result": {
+        "research": "Researched {'node_id': 'exit-a', 'task': 'research exit-a', 'order': 5}",
+        "agent": "ResearcherAgent"
+      }
+    },
+    {
+      "node_id": "exit-b",
+      "task": "research exit-b",
+      "order": 6,
+      "start_time": 1777811615.8014915,
+      "end_time": 1777811615.9096997,
+      "duration": 0.10820817947387695,
+      "result": {
+        "research": "Researched {'node_id': 'exit-b', 'task': 'research exit-b', 'order': 6}",
+        "agent": "ResearcherAgent"
+      }
+    }
+  ],
+  "critical_path_duration": 0.3217284679412842
+}

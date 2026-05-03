@@ -53,4 +53,25 @@ This implementation covers Stage 1 with:
 - Mock agents
 - Basic documentation
 
-Future stages will include experiments, logging, and real LLM integration.
+## Stage 2: Execution Layer
+
+This prototype now supports:
+- Sequential, parallel, hierarchical, and hybrid executors
+- Async execution with `asyncio` and layer-based scheduling
+- Execution tracing with per-node timestamps and durations
+- Execution logging to `results/execution_trace.json` and `logs/execution_metrics.json`
+- Timing metrics including total latency, critical path latency, and parallel efficiency
+- Demo scenarios for wide sparse, deep dependency, layered, and coordinator graphs
+
+## Demo
+
+Run the demo scenarios:
+
+```bash
+python demo.py
+```
+
+Generated files:
+- `results/execution_trace.json`
+- `results/scenario_<name>_<topology>_trace.json`
+- `logs/execution_metrics.json`

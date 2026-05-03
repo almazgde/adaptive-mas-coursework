@@ -1,0 +1,23 @@
+{
+  "total_latency": 0.43276214599609375,
+  "per_node_latency": {
+    "coordinator": 0.10429191589355469,
+    "research-1": 0.10935831069946289,
+    "research-2": 0.10936808586120605,
+    "critique": 0.10934019088745117,
+    "synthesize": 0.10933208465576172,
+    "aggregate-coordinator": 0.10945796966552734
+  },
+  "critical_path_latency": 0.32299208641052246,
+  "parallel_efficiency": 0.746350135747404,
+  "topology_type": "hierarchical",
+  "node_count": 6,
+  "execution_order": [
+    "coordinator",
+    "research-1",
+    "research-2",
+    "critique",
+    "synthesize",
+    "aggregate-coordinator"
+  ]
+}
