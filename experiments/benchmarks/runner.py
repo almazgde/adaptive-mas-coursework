@@ -52,7 +52,7 @@ class BenchmarkRunner:
         TopologyType.HYBRID,
     ]
 
-    def __init__(self, runs: int = 10, node_count: int = 16):
+    def __init__(self, runs: int = 15, node_count: int = 32):
         self.runs = runs
         self.node_count = node_count
         RESULTS_DIR.mkdir(exist_ok=True)
@@ -256,10 +256,12 @@ class BenchmarkRunner:
 
 
 def main() -> None:
-    runner = BenchmarkRunner(runs=10, node_count=16)
+    # Запуск с увеличенной сложностью: 32 узла, 15 повторов
+    runner = BenchmarkRunner(runs=15, node_count=32)
     results = runner.run_all()
     print(f"Wrote {len(results)} benchmark runs to {CSV_PATH}")
     print(f"Wrote summary to {SUMMARY_PATH}")
+    print(f"Graph complexity: {runner.node_count} nodes, {runner.runs} runs per scenario")
 
 
 if __name__ == "__main__":
