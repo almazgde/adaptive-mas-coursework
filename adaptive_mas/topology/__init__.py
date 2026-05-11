@@ -1,4 +1,4 @@
 # Topology module
-from .selector import TopologySelector, TopologyType
+from .selector import AdaptiveTopologyMode, TopologySelector, TopologyType
 
-__all__ = ["TopologySelector", "TopologyType"]
+__all__ = ["AdaptiveTopologyMode", "TopologySelector", "TopologyType"]

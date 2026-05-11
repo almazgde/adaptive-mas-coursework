@@ -31,14 +31,24 @@ def grouped_mean(rows, key_fields, value_field):
 def plot_latency_comparison(rows):
     data = grouped_mean(rows, ["graph_type", "requested_topology"], "execution_latency")
     graph_types = sorted({row["graph_type"] for row in rows})
-    topologies = ["sequential", "parallel", "hierarchical", "hybrid", "adaptive"]
+    preferred_order = [
+        "sequential",
+        "parallel",
+        "hierarchical",
+        "hybrid",
+        "rule_based_adaptive",
+        "cost_aware_adaptive",
+    ]
+    seen = {row["requested_topology"] for row in rows}
+    topologies = [topology for topology in preferred_order if topology in seen]
     x = range(len(graph_types))
-    width = 0.15
+    width = 0.75 / max(len(topologies), 1)
 
     plt.figure(figsize=(12, 6))
     for offset, topology in enumerate(topologies):
         values = [data.get((graph_type, topology), 0.0) for graph_type in graph_types]
-        positions = [index + (offset - 2) * width for index in x]
+        center = (len(topologies) - 1) / 2
+        positions = [index + (offset - center) * width for index in x]
         plt.bar(positions, values, width=width, label=topology)
     plt.xticks(list(x), graph_types, rotation=15)
     plt.ylabel("Average execution latency")
@@ -55,7 +65,8 @@ def plot_topology_efficiency(rows):
     labels = [key[0] for key in keys]
     values = [data[key] for key in keys]
     plt.figure(figsize=(9, 5))
-    plt.bar(labels, values, color=["#4c78a8", "#f58518", "#54a24b", "#e45756", "#72b7b2"])
+    colors = ["#4c78a8", "#f58518", "#54a24b", "#e45756", "#72b7b2", "#b279a2"]
+    plt.bar(labels, values, color=colors[: len(labels)])
     plt.ylabel("Average parallel efficiency")
     plt.title("Topology efficiency")
     plt.ylim(0, 1.05)

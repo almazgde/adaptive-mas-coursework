@@ -101,4 +101,9 @@ Generated files:
 - `results/critical_path_impact.png`
 - `results/graph_<graph_type>.png`
 
-The benchmark suite includes wide sparse, deep dependency, layered, and centralized coordinator task graphs. Each graph is run 10 times against static sequential, parallel, hierarchical, and hybrid strategies, plus an adaptive strategy selected from DAG metrics.
+The benchmark suite includes wide sparse, deep dependency, layered, and centralized coordinator task graphs. Each graph is run against static sequential, parallel, hierarchical, and hybrid strategies, plus two adaptive modes:
+
+- `rule_based_adaptive`: the original structural heuristic based on graph depth, width, density, and maximum degree.
+- `cost_aware_adaptive`: estimates every supported topology before selection using expected latency, coordination overhead, critical path penalty, and worker utilization.
+
+The benchmark CSV includes both the adaptive mode requested and the topology actually selected for execution.

@@ -7,7 +7,7 @@ from typing import Dict, Iterable, List, Tuple
 
 from adaptive_mas.dag import DAG
 from adaptive_mas.metrics import GraphMetrics
-from adaptive_mas.topology import TopologySelector, TopologyType
+from adaptive_mas.topology import AdaptiveTopologyMode, TopologySelector, TopologyType
 
 from .synthetic_graphs import SyntheticGraphFactory
 
@@ -21,6 +21,7 @@ SUMMARY_PATH = RESULTS_DIR / "benchmark_summary.csv"
 class BenchmarkResult:
     run_id: int
     strategy_group: str
+    adaptive_mode: str
     requested_topology: str
     topology: str
     graph_type: str
@@ -51,6 +52,10 @@ class BenchmarkRunner:
         TopologyType.HIERARCHICAL,
         TopologyType.HYBRID,
     ]
+    ADAPTIVE_MODES = [
+        AdaptiveTopologyMode.RULE_BASED,
+        AdaptiveTopologyMode.COST_AWARE,
+    ]
 
     def __init__(self, runs: int = 15, node_count: int = 32):
         self.runs = runs
@@ -63,10 +68,34 @@ class BenchmarkRunner:
             for run_id in range(1, self.runs + 1):
                 dag = SyntheticGraphFactory.create(graph_type, self.node_count, seed=run_id)
                 for topology in self.STATIC_TOPOLOGIES:
-                    results.append(self._run_single(dag, graph_type, run_id, "static", topology, topology.value))
+                    results.append(
+                        self._run_single(
+                            dag,
+                            graph_type,
+                            run_id,
+                            "static",
+                            "static",
+                            topology,
+                            topology.value,
+                        )
+                    )
 
-                adaptive_type = TopologySelector.select_adaptive_topology_type(dag)
-                results.append(self._run_single(dag, graph_type, run_id, "adaptive", adaptive_type, "adaptive"))
+                for adaptive_mode in self.ADAPTIVE_MODES:
+                    if adaptive_mode == AdaptiveTopologyMode.COST_AWARE:
+                        adaptive_type = TopologySelector.select_cost_aware_adaptive_topology_type(dag)
+                    else:
+                        adaptive_type = TopologySelector.select_rule_based_adaptive_topology_type(dag)
+                    results.append(
+                        self._run_single(
+                            dag,
+                            graph_type,
+                            run_id,
+                            "adaptive",
+                            adaptive_mode.value,
+                            adaptive_type,
+                            adaptive_mode.value,
+                        )
+                    )
 
         self.write_results(results)
         self.write_summary(results)
@@ -78,11 +107,17 @@ class BenchmarkRunner:
         graph_type: str,
         run_id: int,
         strategy_group: str,
+        adaptive_mode: str,
         topology: TopologyType,
         requested_topology: str,
     ) -> BenchmarkResult:
         profile = self._topology_profile(topology, len(dag.nodes))
-        node_costs = {node_id: dag.get_node(node_id).data["cost"] for node_id in dag.nodes}
+        node_costs = {
+            node_id: float(
+                dag.get_node(node_id).data.get("cost", TopologySelector.DEFAULT_NODE_COST)
+            )
+            for node_id in dag.nodes
+        }
         base_work = sum(node_costs.values())
         schedule_latency, waves, worker_time = self._schedule(dag, node_costs, profile["workers"])
         coordination_overhead = self._coordination_overhead(topology, dag, waves, profile)
@@ -98,6 +133,7 @@ class BenchmarkRunner:
         return BenchmarkResult(
             run_id=run_id,
             strategy_group=strategy_group,
+            adaptive_mode=adaptive_mode,
             requested_topology=requested_topology,
             topology=topology.value,
             graph_type=graph_type,
@@ -121,18 +157,24 @@ class BenchmarkRunner:
             writer.writerows(rows)
 
     def write_summary(self, results: Iterable[BenchmarkResult]) -> None:
-        grouped: Dict[Tuple[str, str, str], List[BenchmarkResult]] = {}
+        grouped: Dict[Tuple[str, str, str, str], List[BenchmarkResult]] = {}
         for result in results:
-            key = (result.graph_type, result.strategy_group, result.requested_topology)
+            key = (
+                result.graph_type,
+                result.strategy_group,
+                result.adaptive_mode,
+                result.requested_topology,
+            )
             grouped.setdefault(key, []).append(result)
 
         rows = []
-        for (graph_type, strategy_group, requested_topology), items in sorted(grouped.items()):
+        for (graph_type, strategy_group, adaptive_mode, requested_topology), items in sorted(grouped.items()):
             latencies = [item.execution_latency for item in items]
             rows.append(
                 {
                     "graph_type": graph_type,
                     "strategy_group": strategy_group,
+                    "adaptive_mode": adaptive_mode,
                     "requested_topology": requested_topology,
                     "selected_topology": self._mode(item.topology for item in items),
                     "runs": len(items),
