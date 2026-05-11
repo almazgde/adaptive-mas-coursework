@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 import time
 from dataclasses import dataclass, asdict
 from pathlib import Path
@@ -30,6 +31,25 @@ class ExecutionTrace:
 
 
 @dataclass
+class FailureSimulationConfig:
+    """Configuration for lightweight failure simulation.
+
+    Failure simulation is disabled by default, preserving the original executor
+    behavior. When enabled, each node attempt can raise an exception, timeout,
+    or return an empty result according to the configured probabilities.
+    """
+
+    failure_enabled: bool = False
+    failure_probability: float = 0.0
+    timeout_probability: float = 0.0
+    empty_result_probability: float = 0.0
+    max_retries: int = 0
+    timeout_seconds: float = 1.0
+    fallback_enabled: bool = False
+    random_seed: Optional[int] = None
+
+
+@dataclass
 class ExecutionMetrics:
     total_latency: float
     per_node_latency: Dict[str, float]
@@ -47,25 +67,39 @@ class ExecutionManager:
     """Factory for executor creation."""
 
     @staticmethod
-    def create_executor(dag: DAG, topology_type: TopologyType):
+    def create_executor(
+        dag: DAG,
+        topology_type: TopologyType,
+        failure_config: Optional[FailureSimulationConfig] = None,
+    ):
         if topology_type == TopologyType.SEQUENTIAL:
-            return SequentialExecutor(dag, topology_type)
+            return SequentialExecutor(dag, topology_type, failure_config)
         elif topology_type == TopologyType.PARALLEL:
-            return ParallelExecutor(dag, topology_type)
+            return ParallelExecutor(dag, topology_type, failure_config)
         elif topology_type == TopologyType.HIERARCHICAL:
-            return HierarchicalExecutor(dag, topology_type)
+            return HierarchicalExecutor(dag, topology_type, failure_config)
         elif topology_type == TopologyType.HYBRID:
-            return HybridExecutor(dag, topology_type)
+            return HybridExecutor(dag, topology_type, failure_config)
         raise ValueError(f"Unsupported topology type: {topology_type}")
 
 
 class BaseExecutor:
-    def __init__(self, dag: DAG, topology_type: TopologyType):
+    def __init__(
+        self,
+        dag: DAG,
+        topology_type: TopologyType,
+        failure_config: Optional[FailureSimulationConfig] = None,
+    ):
         self.dag = dag
         self.topology_type = topology_type
         self.topology_config = TopologySelector.select_topology(dag, topology_type)
         self.node_traces: List[Dict[str, Any]] = []
         self.execution_order: List[str] = []
+        self.node_levels = self._build_node_level_map()
+        self.failure_config = failure_config or FailureSimulationConfig()
+        self.random = random.Random(self.failure_config.random_seed)
+        self.failed_nodes = set()
+        self.skipped_nodes = set()
 
     async def execute(self) -> ExecutionTrace:
         self._ensure_acyclic()
@@ -97,27 +131,157 @@ class BaseExecutor:
         raise NotImplementedError
 
     async def _execute_node(self, node_id: str, order_index: int) -> Dict[str, Any]:
+        if self._has_blocked_predecessor(node_id):
+            self._skip_node(node_id, order_index, "predecessor_failed")
+            return {"status": "skipped", "reason": "predecessor_failed"}
+
         node = self.dag.get_node(node_id)
         if node is None:
             node = type("DynamicNode", (), {"task": node_id})()
         agent = self._select_agent(node)
         task_label = getattr(node, "task", node_id)
         start_ts = time.time()
-        result = await agent.execute({"node_id": node_id, "task": task_label, "order": order_index})
+        result: Dict[str, Any] = {}
+        status = "success"
+        retry_count = 0
+        error_message = None
+        used_fallback = False
+
+        for attempt in range(self.failure_config.max_retries + 1):
+            try:
+                result = await self._attempt_agent_execution(
+                    agent,
+                    {"node_id": node_id, "task": task_label, "order": order_index, "attempt": attempt},
+                )
+                status = "success"
+                error_message = None
+                break
+            except asyncio.TimeoutError as exc:
+                retry_count = attempt + 1 if attempt < self.failure_config.max_retries else attempt
+                status = "timeout"
+                error_message = str(exc) or f"Timed out after {self.failure_config.timeout_seconds}s"
+            except Exception as exc:
+                retry_count = attempt + 1 if attempt < self.failure_config.max_retries else attempt
+                status = "failed"
+                error_message = str(exc)
+        else:
+            result = {}
+
+        if status in {"failed", "timeout"} and not result:
+            if self.failure_config.fallback_enabled:
+                status = "fallback"
+                used_fallback = True
+                result = {
+                    "fallback": True,
+                    "node_id": node_id,
+                    "agent": agent.__class__.__name__,
+                    "reason": error_message,
+                }
+            else:
+                self.failed_nodes.add(node_id)
+
         end_ts = time.time()
         duration = end_ts - start_ts
         trace = {
             "node_id": node_id,
             "task": task_label,
+            "agent": agent.__class__.__name__,
             "order": order_index,
+            "status": status,
+            "retry_count": retry_count,
+            "error_message": error_message,
+            "used_fallback": used_fallback,
             "start_time": start_ts,
             "end_time": end_ts,
             "duration": duration,
+            "topology": self.topology_config["type"],
+            "level": self.node_levels.get(node_id),
+            "layer": self.node_levels.get(node_id),
             "result": result,
         }
         self.node_traces.append(trace)
-        self.execution_order.append(node_id)
+        if status != "failed":
+            self.execution_order.append(node_id)
         return result
+
+    async def _attempt_agent_execution(self, agent: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        if not self.failure_config.failure_enabled:
+            return await agent.execute(payload)
+
+        roll = self.random.random()
+        if roll < self.failure_config.failure_probability:
+            raise RuntimeError("Simulated agent exception")
+
+        roll = self.random.random()
+        if roll < self.failure_config.timeout_probability:
+            await asyncio.wait_for(
+                asyncio.sleep(self.failure_config.timeout_seconds + 0.01),
+                timeout=self.failure_config.timeout_seconds,
+            )
+
+        roll = self.random.random()
+        if roll < self.failure_config.empty_result_probability:
+            return {}
+
+        return await asyncio.wait_for(agent.execute(payload), timeout=self.failure_config.timeout_seconds)
+
+    def _has_blocked_predecessor(self, node_id: str) -> bool:
+        if node_id not in self.dag.graph:
+            return False
+        return any(
+            predecessor in self.failed_nodes or predecessor in self.skipped_nodes
+            for predecessor in self.dag.get_predecessors(node_id)
+        )
+
+    def _skip_node(self, node_id: str, order_index: int, reason: str):
+        if node_id in self.skipped_nodes:
+            return
+        now = time.time()
+        node = self.dag.get_node(node_id)
+        task_label = getattr(node, "task", node_id) if node is not None else node_id
+        trace = {
+            "node_id": node_id,
+            "task": task_label,
+            "agent": None,
+            "order": order_index,
+            "status": "skipped",
+            "retry_count": 0,
+            "error_message": reason,
+            "used_fallback": False,
+            "start_time": now,
+            "end_time": now,
+            "duration": 0.0,
+            "topology": self.topology_config["type"],
+            "level": self.node_levels.get(node_id),
+            "layer": self.node_levels.get(node_id),
+            "result": {},
+        }
+        self.skipped_nodes.add(node_id)
+        self.node_traces.append(trace)
+
+    def _skip_blocked_remaining(self, remaining: set, order_index: int) -> int:
+        skipped_count = 0
+        changed = True
+        while changed:
+            changed = False
+            for node_id in sorted(list(remaining)):
+                if self._has_blocked_predecessor(node_id):
+                    remaining.remove(node_id)
+                    self._skip_node(node_id, order_index + skipped_count, "predecessor_failed")
+                    skipped_count += 1
+                    changed = True
+        return skipped_count
+
+    def _build_node_level_map(self) -> Dict[str, int]:
+        if "levels" in self.topology_config:
+            return dict(self.topology_config["levels"])
+        if "layers" in self.topology_config:
+            return {
+                node_id: index + 1
+                for index, layer in enumerate(self.topology_config["layers"])
+                for node_id in layer
+            }
+        return {}
 
     def _select_agent(self, node: Any):
         task_lower = getattr(node, "task", str(node)).lower()
@@ -132,14 +296,20 @@ class BaseExecutor:
         return PlannerAgent()
 
     def _compute_critical_path_duration(self) -> float:
-        durations = {trace["node_id"]: trace["duration"] for trace in self.node_traces}
+        durations = {
+            trace["node_id"]: trace["duration"]
+            for trace in self.node_traces
+            if trace.get("status") not in {"failed", "skipped"}
+        }
         if not durations:
             return 0.0
         longest: Dict[str, float] = {}
         for node in self.dag.topological_sort():
-            pred_durations = [longest[p] for p in self.dag.get_predecessors(node)]
+            if node not in durations:
+                continue
+            pred_durations = [longest[p] for p in self.dag.get_predecessors(node) if p in longest]
             longest[node] = max(pred_durations) + durations[node] if pred_durations else durations[node]
-        return max(longest.values())
+        return max(longest.values(), default=0.0)
 
     def _build_metrics(self, trace: ExecutionTrace) -> ExecutionMetrics:
         total_latency = trace.duration
@@ -191,6 +361,7 @@ class ParallelExecutor(BaseExecutor):
                 for successor in self.dag.get_successors(node):
                     indegree[successor] -= 1
             order_index += len(ready)
+            order_index += self._skip_blocked_remaining(remaining, order_index)
 
 
 class HierarchicalExecutor(BaseExecutor):
@@ -207,7 +378,10 @@ class HierarchicalExecutor(BaseExecutor):
         if tasks:
             await asyncio.gather(*tasks)
         if coordinator:
-            await self._execute_node(f"aggregate-{coordinator}", order_index)
+            if coordinator in self.failed_nodes or coordinator in self.skipped_nodes:
+                self._skip_node(f"aggregate-{coordinator}", order_index, "coordinator_failed")
+            else:
+                await self._execute_node(f"aggregate-{coordinator}", order_index)
 
     async def _execute_subtask_group(self, group: List[str], starting_index: int):
         for offset, node_id in enumerate(group):

@@ -11,7 +11,7 @@
 5. executor utilization;
 6. critical path latency.
 
-Данные экспериментов были сохранены в `results/benchmark_results.csv`, а агрегированная статистика — в `results/benchmark_summary.csv`. Для каждой комбинации graph type и strategy было выполнено 10 повторов. Все графы в текущем запуске имели `16` узлов. Пример строки из `benchmark_results.csv` для `wide_sparse` показывает, что в одном из запусков static sequential имел `16` узлов, `3` ребра, глубину `4`, latency `1.8472`, critical path latency `0.4177`, coordination overhead `0.0335` и executor utilization `0.981864`.
+Данные экспериментов сохраняются в `benchmark_results.csv`, а агрегированная статистика — в `benchmark_summary.csv`. Конкретное число повторов, размер графа и output directory задаются через CLI или JSON config. Если benchmark запускается через `run.py experiment`, рядом с результатами дополнительно сохраняется `experiment_config_used.json`, фиксирующий фактические параметры запуска.
 
 ## 3.2. Synthetic graph categories
 
@@ -157,3 +157,93 @@ Topology не устраняет зависимости critical path, но до
 В-третьих, execution cost и coordination overhead рассчитываются симулятором. Такая модель полезна для сравнения стратегий внутри проекта, но требует калибровки на реальных системах.
 
 В-четвёртых, adaptive selector основан на простой эвристике. Он интерпретируем, но не оптимизирует latency напрямую и не обучается на предыдущих запусках.
+
+## 3.11. Обновлённая экспериментальная методика
+
+В расширенной версии проекта benchmark runner сравнивает не только пять исходных режимов, но и два adaptive mode:
+
+1. static topology: `sequential`, `parallel`, `hierarchical`, `hybrid`;
+2. `rule_based_adaptive` — выбор по структурным метрикам DAG;
+3. `cost_aware_adaptive` — выбор по прогнозируемой latency, overhead и critical path penalty;
+4. `learned_adaptive` — выбор с помощью lightweight nearest-neighbor model, обученной на synthetic benchmark data.
+
+В CSV output теперь сохраняется как запрошенный режим (`requested_topology`, `adaptive_mode`, `strategy`), так и фактически выбранная topology (`topology`, `selected_topology`). Это важно для adaptive стратегий: пользователь запускает adaptive mode, но executor исполняет одну из конкретных топологий.
+
+Новые benchmark metrics включают:
+
+1. weighted graph metrics: `total_node_cost`, `avg_node_cost`, `max_node_cost`, `cost_variance`, `weighted_critical_path`, `weighted_parallel_width`;
+2. quality metrics: `completeness_score`, `consistency_score`, `synthesis_score`, `dependency_coverage_score`, `overall_quality_score`;
+3. robustness metrics: `success_rate`, `failed_node_count`, `skipped_node_count`, `retry_count_total`, `fallback_count`, `recovery_success_rate`, `wasted_work_estimate`;
+4. compatibility aliases для удобства анализа: `strategy`, `selected_topology`, `latency`, `cost`.
+5. learned selector fields: `selector_mode`, `learned_model_used`, `objective_score`.
+
+Если benchmark ещё не был перезапущен после обновления проекта, новые численные значения появятся после команды:
+
+```powershell
+python run.py benchmark --runs 15 --node-count 32 --selector all
+```
+
+Для learned selector сначала необходимо обучить модель:
+
+```powershell
+python run.py train-selector --runs 100 --output results/learned_selector_model.json
+```
+
+После этого learned mode можно включить в benchmark:
+
+```powershell
+python run.py benchmark --selector learned_adaptive --model results/learned_selector_model.json
+```
+
+## 3.12. Quality metrics
+
+Quality evaluation добавлена как lightweight heuristic model. Она не оценивает семантическую правильность текста, потому что в проекте используются mock agents. Вместо этого evaluator проверяет структурные признаки trace:
+
+1. все ли узлы DAG были выполнены;
+2. нет ли failed, timeout или skipped nodes;
+3. есть ли synthesis/aggregate step;
+4. соблюдены ли зависимости между узлами;
+5. не являются ли результаты пустыми.
+
+Такая модель полезна для сравнения orchestration strategies в контролируемом окружении. Например, topology с меньшей latency может иметь худший quality score, если при включённой failure simulation часть узлов была пропущена или заменена fallback result.
+
+## 3.13. Robustness metrics и failure simulation
+
+Failure simulation позволяет проверять устойчивость execution layer к отказам. Поддерживаются synthetic exception, timeout и empty result. Recovery logic выполняет retry и при необходимости fallback. Если узел не восстановлен, downstream nodes получают статус `skipped`.
+
+Robustness metrics позволяют анализировать:
+
+1. долю успешно выполненных узлов (`success_rate`);
+2. число failed и skipped nodes;
+3. суммарное количество retry;
+4. число fallback results;
+5. долю успешных восстановлений;
+6. wasted work estimate.
+
+Эти метрики особенно важны для multi-agent LLM systems, потому что реальные agent calls могут быть нестабильными: API может вернуть ошибку, ответ может быть пустым, а отдельный шаг может превысить timeout. В данной работе отказоустойчивость моделируется синтетически, поэтому результаты следует интерпретировать как проверку архитектурного механизма, а не как статистику реального LLM backend.
+
+## 3.14. Reproducibility
+
+Для воспроизводимости добавлены JSON config files и единый CLI. Рекомендуемый запуск:
+
+```powershell
+python run.py experiment --config configs/experiment_default.json --runs 5 --random-seed 7 --output-dir results/reproducible_run
+```
+
+После запуска в output directory сохраняются:
+
+1. `benchmark_results.csv`;
+2. `benchmark_summary.csv`;
+3. `experiment_config_used.json`.
+
+Файл `experiment_config_used.json` фиксирует фактические параметры запуска с учётом command line overrides. Unit tests также содержат reproducibility check: один и тот же fixed-seed benchmark запускается дважды, после чего сравниваются полученные строки результатов.
+
+## 3.15. Timeline visualization
+
+Execution traces могут быть визуализированы в виде Gantt chart:
+
+```powershell
+python run.py visualize --trace results/execution_trace.json
+```
+
+Итоговый PNG сохраняется в `results/timeline_<trace>_<topology>.png`. Такой график показывает параллельное и последовательное исполнение узлов, помогает увидеть critical path duration и делает результаты demo более наглядными для защиты.

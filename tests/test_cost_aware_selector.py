@@ -16,6 +16,7 @@ class CostAwareSelectorTest(unittest.TestCase):
             self.assertIn("expected_latency", estimate)
             self.assertIn("coordination_overhead", estimate)
             self.assertIn("critical_path_impact", estimate)
+            self.assertIn("weighted_parallel_width", estimate)
             self.assertIn("parallel_efficiency", estimate)
             self.assertIn("score", estimate)
 

@@ -1,22 +1,57 @@
 # Заключение
 
-В ходе работы был реализован исследовательский прототип адаптивной оркестрации многоагентных LLM-систем на основе DAG. Прототип включает модель графа задач, расчёт графовых метрик, статические топологии исполнения, adaptive selector, execution layer с tracing/logging, benchmark framework, CSV export и визуализацию результатов.
+В ходе работы был реализован и расширен исследовательский прототип адаптивной оркестрации многоагентных LLM-систем на основе DAG. Итоговая версия проекта включает модель графа задач, структурные и weighted graph metrics, статические топологии исполнения, rule-based, cost-aware и learned adaptive selector, execution layer с tracing, benchmark framework, Gantt visualization, quality evaluation, failure simulation and recovery logic, CLI/config layer и набор unit tests.
 
-Гипотеза исследования подтвердилась частично. Эксперименты показали, что метрики DAG позволяют выбирать осмысленную топологию: для `wide_sparse` adaptive selector выбрал `parallel`, а для `deep_dependency` — `sequential`. В этих двух случаях adaptive совпал с лучшей статической стратегией по средней latency.
+Главный результат работы состоит в том, что прототип теперь оценивает orchestration strategies не только по latency и synthetic execution cost, но и по более широкому набору критериев:
 
-В то же время не подтвердилось предположение о том, что adaptive topology всегда будет быстрее любой static topology. Для `layered` adaptive выбрал `hybrid`, но static parallel имел меньшую latency: `0.641033` против `0.67070`. Для `centralized_coordinator` adaptive выбрал `hierarchical`, однако static parallel оказался быстрее: `0.541673` против `0.66837`. Эти результаты показывают, что структурная эвристика не всегда совпадает с оптимумом по latency.
+1. weighted critical path и распределение стоимости узлов;
+2. coordination overhead и worker utilization;
+3. heuristic quality metrics;
+4. robustness metrics при synthetic failures;
+5. воспроизводимость экспериментов через fixed seed и сохранение конфигурации запуска.
 
-Подтвердилось, что структура графа существенно влияет на orchestration efficiency. Wide sparse graphs выигрывают от параллельного исполнения, deep dependency graphs ограничены critical path, а layered и coordinator graphs требуют более тонкого выбора стратегии. Также подтвердилось, что coordination overhead может снижать пользу parallelism, особенно когда граф имеет длинный критический путь.
+Первоначальная структурная эвристика adaptive selector была сохранена как `rule_based_adaptive`, но дополнена режимом `cost_aware_adaptive`. Новый режим оценивает все поддерживаемые топологии до выбора и использует простую интерпретируемую функцию:
 
-Практическим результатом работы является воспроизводимый benchmark framework. Он позволяет запускать repeated experiments, сохранять результаты в CSV и строить графики для дальнейшего анализа.
+```text
+score = expected_latency + coordination_overhead + critical_path_penalty
+```
 
-Перспективы улучшения adaptive selector:
+Это не делает adaptive strategy универсально лучшей, но делает выбор более осмысленным в тех случаях, где структура DAG сама по себе недостаточна для прогноза latency.
 
-1. учитывать прогнозируемую latency для каждой topology, а не только структурные признаки графа;
-2. калибровать overhead model на реальных LLM/API traces;
-3. учитывать распределение node costs;
-4. добавлять динамическую адаптацию во время исполнения;
-5. сравнивать heuristic selector с learned selector;
-6. расширить набор synthetic graphs и добавить реальные task traces.
+Дополнительно реализован `learned_adaptive` selector. Он использует nearest-neighbor baseline по признакам DAG и обучается на synthetic benchmark data. Objective score для обучения задан явно: `estimated_latency_with_overhead + 0.05 * execution_cost`. Этот компонент не является полноценной ML-системой, но показывает следующий исследовательский шаг: переход от ручных эвристик к выбору topology на основе накопленных экспериментальных данных.
 
-Таким образом, работа показывает, что adaptive orchestration является перспективным направлением, но требует аккуратного моделирования стоимости и честной экспериментальной проверки. Результаты проекта не доказывают универсальное превосходство adaptive strategy, но демонстрируют её полезность как механизма выбора topology в зависимости от структуры DAG.
+Добавление weighted metrics уточнило модель DAG. Теперь критический путь может измеряться не только числом узлов или рёбер, но и суммарной стоимостью задач. Это важно для multi-agent systems, где разные агенты и подзадачи могут иметь различную стоимость исполнения.
+
+Quality evaluation и robustness evaluation расширили экспериментальную методику. Качество результата оценивается эвристически по trace: полнота выполнения, наличие synthesis/aggregate шага, согласованность результатов и соблюдение зависимостей. Robustness layer позволяет моделировать exception, timeout и empty result, а также проверять retry, fallback и skipped descendants. Благодаря этому проект ближе к реальным условиям многоагентных систем, где важны не только скорость, но и устойчивость.
+
+Также был добавлен единый CLI `run.py` и JSON config support. Это упрощает воспроизведение экспериментов и делает проект удобнее для проверки: параметры запуска фиксируются в `experiment_config_used.json`, а benchmark outputs сохраняются в выбранный output directory.
+
+## Ограничения
+
+Работа имеет несколько ограничений.
+
+Во-первых, используются mock agents, а не реальные LLM backend. Поэтому результаты не являются измерением фактической задержки или стоимости API-вызовов.
+
+Во-вторых, quality evaluation является heuristic model. Она проверяет структуру trace и наличие результатов, но не оценивает семантическую правильность сгенерированного текста.
+
+В-третьих, failure model является synthetic. Вероятности exception, timeout и empty result задаются конфигурацией и не калиброваны на реальных production traces.
+
+В-четвёртых, cost-aware selector использует простую аналитическую scoring formula. Она интерпретируема и не гарантирует оптимальность для всех типов графов.
+
+В-пятых, learned selector является nearest-neighbor baseline. Его качество зависит от synthetic training set, выбранных features и objective score. Он не заменяет learned policy, обученную на реальных traces.
+
+В-шестых, synthetic benchmark graphs являются упрощением реальных task graphs. Реальные задачи могут иметь динамически возникающие подзадачи, изменяемую структуру зависимостей и более сложную семантику результатов.
+
+## Future work
+
+Перспективы дальнейшего развития:
+
+1. подключить real LLM backend и измерять реальные latency/cost traces;
+2. откалибровать overhead и failure model на реальных execution logs;
+3. реализовать learned selector, обучаемый на истории запусков;
+4. сравнить heuristic selector и learned selector на одинаковых benchmark suites;
+5. добавить online adaptation во время исполнения DAG;
+6. расширить quality evaluation с использованием human/LLM judge при наличии реальных ответов;
+7. добавить больше типов synthetic и real-world task graphs.
+
+Таким образом, проект демонстрирует, что adaptive orchestration целесообразно рассматривать как многокритериальную задачу. Минимальная latency важна, но полноценная оценка многоагентной системы также требует анализа стоимости, качества, отказоустойчивости и воспроизводимости экспериментов.

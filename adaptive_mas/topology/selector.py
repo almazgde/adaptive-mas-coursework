@@ -16,12 +16,13 @@ class TopologyType(Enum):
 class AdaptiveTopologyMode(Enum):
     RULE_BASED = "rule_based_adaptive"
     COST_AWARE = "cost_aware_adaptive"
+    LEARNED = "learned_adaptive"
 
 
 class TopologySelector:
     """Selects and applies topology strategies to the DAG."""
 
-    DEFAULT_NODE_COST = 0.1
+    DEFAULT_NODE_COST = GraphMetrics.DEFAULT_NODE_COST
 
     @staticmethod
     def select_topology(dag: DAG, topology_type: TopologyType) -> Dict[str, Any]:
@@ -111,8 +112,9 @@ class TopologySelector:
         path penalty keeps the selector conservative when a graph is inherently
         sequential and parallel coordination cannot reduce the critical path.
         """
-        node_costs = TopologySelector._node_costs(dag)
-        critical_path_latency = TopologySelector._weighted_critical_path(dag, node_costs)
+        node_costs = GraphMetrics.node_costs(dag)
+        critical_path_latency = GraphMetrics.weighted_critical_path_length(dag)
+        weighted_parallel_width = GraphMetrics.weighted_parallel_width(dag)
         estimates: Dict[TopologyType, Dict[str, float]] = {}
 
         for topology in TopologyType:
@@ -138,6 +140,7 @@ class TopologySelector:
                 "coordination_overhead": round(coordination_overhead, 6),
                 "critical_path_impact": round(critical_path_impact, 6),
                 "critical_path_penalty": round(critical_path_penalty, 6),
+                "weighted_parallel_width": round(weighted_parallel_width, 6),
                 "worker_utilization": round(worker_utilization, 6),
                 "parallel_efficiency": round(parallel_efficiency, 6),
                 "score": round(score, 6),
@@ -174,15 +177,6 @@ class TopologySelector:
         }
 
     @staticmethod
-    def _node_costs(dag: DAG) -> Dict[str, float]:
-        costs = {}
-        for node_id in dag.nodes:
-            node = dag.get_node(node_id)
-            value = node.data.get("cost") if node else None
-            costs[node_id] = float(value) if value is not None else TopologySelector.DEFAULT_NODE_COST
-        return costs
-
-    @staticmethod
     def _schedule(dag: DAG, node_costs: Dict[str, float], workers: int) -> Tuple[float, int, float]:
         remaining = set(dag.nodes.keys())
         indegree = {node: dag.graph.in_degree(node) for node in remaining}
@@ -214,17 +208,6 @@ class TopologySelector:
                     indegree[successor] -= 1
 
         return now, waves, worker_time
-
-    @staticmethod
-    def _weighted_critical_path(dag: DAG, node_costs: Dict[str, float]) -> float:
-        longest: Dict[str, float] = {}
-        for node in dag.topological_sort():
-            predecessors = dag.get_predecessors(node)
-            if predecessors:
-                longest[node] = max(longest[pred] for pred in predecessors) + node_costs[node]
-            else:
-                longest[node] = node_costs[node]
-        return max(longest.values(), default=0.0)
 
     @staticmethod
     def _coordination_overhead(

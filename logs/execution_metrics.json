@@ -1,15 +1,15 @@
 {
-  "total_latency": 0.43148136138916016,
+  "total_latency": 0.4370288848876953,
   "per_node_latency": {
-    "coordinator": 0.10462522506713867,
-    "research-1": 0.10869646072387695,
-    "research-2": 0.10874152183532715,
-    "critique": 0.10877776145935059,
-    "synthesize": 0.108734130859375,
-    "aggregate-coordinator": 0.10904407501220703
+    "coordinator": 0.10845494270324707,
+    "research-1": 0.10905003547668457,
+    "research-2": 0.10914993286132812,
+    "critique": 0.10986638069152832,
+    "synthesize": 0.10982036590576172,
+    "aggregate-coordinator": 0.1091313362121582
   },
-  "critical_path_latency": 0.3221008777618408,
-  "parallel_efficiency": 0.7465000961451327,
+  "critical_path_latency": 0.3274252414703369,
+  "parallel_efficiency": 0.7492073242583872,
   "topology_type": "hierarchical",
   "node_count": 6,
   "execution_order": [

@@ -1,5 +1,5 @@
 from .executor import ExecutionManager, BaseExecutor, SequentialExecutor, ParallelExecutor, HierarchicalExecutor, HybridExecutor
-from .executor import ExecutionTrace, ExecutionMetrics
+from .executor import ExecutionTrace, ExecutionMetrics, FailureSimulationConfig
 
 __all__ = [
     "ExecutionManager",
@@ -10,4 +10,5 @@ __all__ = [
     "HybridExecutor",
     "ExecutionTrace",
     "ExecutionMetrics",
+    "FailureSimulationConfig",
 ]

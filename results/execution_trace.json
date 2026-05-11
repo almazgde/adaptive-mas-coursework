@@ -29,82 +29,130 @@
     "synthesize",
     "aggregate-coordinator"
   ],
-  "start_time": 1777811928.3176737,
-  "end_time": 1777811928.749155,
-  "duration": 0.43148136138916016,
+  "start_time": 1778509986.4761395,
+  "end_time": 1778509986.9131684,
+  "duration": 0.4370288848876953,
   "node_traces": [
     {
       "node_id": "coordinator",
       "task": "plan coordinator",
+      "agent": "PlannerAgent",
       "order": 0,
-      "start_time": 1777811928.31769,
-      "end_time": 1777811928.4223151,
-      "duration": 0.10462522506713867,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.4761786,
+      "end_time": 1778509986.5846336,
+      "duration": 0.10845494270324707,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "plan": "Planned for {'node_id': 'coordinator', 'task': 'plan coordinator', 'order': 0}",
+        "plan": "Planned for {'node_id': 'coordinator', 'task': 'plan coordinator', 'order': 0, 'attempt': 0}",
         "agent": "PlannerAgent"
       }
     },
     {
       "node_id": "research-1",
       "task": "research node 1",
+      "agent": "ResearcherAgent",
       "order": 1,
-      "start_time": 1777811928.422464,
-      "end_time": 1777811928.5311604,
-      "duration": 0.10869646072387695,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.5848105,
+      "end_time": 1778509986.6938605,
+      "duration": 0.10905003547668457,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'research-1', 'task': 'research node 1', 'order': 1}",
+        "research": "Researched {'node_id': 'research-1', 'task': 'research node 1', 'order': 1, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "research-2",
       "task": "research node 2",
+      "agent": "ResearcherAgent",
       "order": 3,
-      "start_time": 1777811928.4225016,
-      "end_time": 1777811928.531243,
-      "duration": 0.10874152183532715,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.5848544,
+      "end_time": 1778509986.6940043,
+      "duration": 0.10914993286132812,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'research-2', 'task': 'research node 2', 'order': 3}",
+        "research": "Researched {'node_id': 'research-2', 'task': 'research node 2', 'order': 3, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "critique",
       "task": "critic node",
+      "agent": "CriticAgent",
       "order": 2,
-      "start_time": 1777811928.5311878,
-      "end_time": 1777811928.6399655,
-      "duration": 0.10877776145935059,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.6939268,
+      "end_time": 1778509986.8037932,
+      "duration": 0.10986638069152832,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "critique": "Critiqued {'node_id': 'critique', 'task': 'critic node', 'order': 2}",
+        "critique": "Critiqued {'node_id': 'critique', 'task': 'critic node', 'order': 2, 'attempt': 0}",
         "agent": "CriticAgent"
       }
     },
     {
       "node_id": "synthesize",
       "task": "synthesize node",
+      "agent": "SynthesizerAgent",
       "order": 4,
-      "start_time": 1777811928.5312548,
-      "end_time": 1777811928.639989,
-      "duration": 0.108734130859375,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.6940277,
+      "end_time": 1778509986.803848,
+      "duration": 0.10982036590576172,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "synthesis": "Synthesized {'node_id': 'synthesize', 'task': 'synthesize node', 'order': 4}",
+        "synthesis": "Synthesized {'node_id': 'synthesize', 'task': 'synthesize node', 'order': 4, 'attempt': 0}",
         "agent": "SynthesizerAgent"
       }
     },
     {
       "node_id": "aggregate-coordinator",
       "task": "aggregate-coordinator",
+      "agent": "SynthesizerAgent",
       "order": 5,
-      "start_time": 1777811928.6401007,
-      "end_time": 1777811928.7491448,
-      "duration": 0.10904407501220703,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.8040063,
+      "end_time": 1778509986.9131377,
+      "duration": 0.1091313362121582,
+      "topology": "hierarchical",
+      "level": null,
+      "layer": null,
       "result": {
-        "synthesis": "Synthesized {'node_id': 'aggregate-coordinator', 'task': 'aggregate-coordinator', 'order': 5}",
+        "synthesis": "Synthesized {'node_id': 'aggregate-coordinator', 'task': 'aggregate-coordinator', 'order': 5, 'attempt': 0}",
         "agent": "SynthesizerAgent"
       }
     }
   ],
-  "critical_path_duration": 0.3221008777618408
+  "critical_path_duration": 0.3274252414703369
 }

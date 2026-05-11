@@ -45,94 +45,166 @@
     "exit-a",
     "exit-b"
   ],
-  "start_time": 1777811927.9931464,
-  "end_time": 1777811928.312429,
-  "duration": 0.31928253173828125,
+  "start_time": 1778509986.1292567,
+  "end_time": 1778509986.4587972,
+  "duration": 0.329540491104126,
   "node_traces": [
     {
       "node_id": "entry-a",
       "task": "research entry-a",
+      "agent": "ResearcherAgent",
       "order": 0,
-      "start_time": 1777811927.9932125,
-      "end_time": 1777811928.0940735,
-      "duration": 0.1008610725402832,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.129433,
+      "end_time": 1778509986.2404993,
+      "duration": 0.11106634140014648,
+      "topology": "hybrid",
+      "level": 1,
+      "layer": 1,
       "result": {
-        "research": "Researched {'node_id': 'entry-a', 'task': 'research entry-a', 'order': 0}",
+        "research": "Researched {'node_id': 'entry-a', 'task': 'research entry-a', 'order': 0, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "entry-b",
       "task": "research entry-b",
+      "agent": "ResearcherAgent",
       "order": 1,
-      "start_time": 1777811927.9932275,
-      "end_time": 1777811928.0941,
-      "duration": 0.10087251663208008,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.1294725,
+      "end_time": 1778509986.2405343,
+      "duration": 0.11106181144714355,
+      "topology": "hybrid",
+      "level": 1,
+      "layer": 1,
       "result": {
-        "research": "Researched {'node_id': 'entry-b', 'task': 'research entry-b', 'order': 1}",
+        "research": "Researched {'node_id': 'entry-b', 'task': 'research entry-b', 'order': 1, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "mid-a",
       "task": "research mid-a",
+      "agent": "ResearcherAgent",
       "order": 2,
-      "start_time": 1777811928.0942662,
-      "end_time": 1777811928.2025065,
-      "duration": 0.10824036598205566,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.2407243,
+      "end_time": 1778509986.3483293,
+      "duration": 0.10760498046875,
+      "topology": "hybrid",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'mid-a', 'task': 'research mid-a', 'order': 2}",
+        "research": "Researched {'node_id': 'mid-a', 'task': 'research mid-a', 'order': 2, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "mid-b",
       "task": "research mid-b",
+      "agent": "ResearcherAgent",
       "order": 3,
-      "start_time": 1777811928.0942988,
-      "end_time": 1777811928.2025273,
-      "duration": 0.10822844505310059,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.2407753,
+      "end_time": 1778509986.3483677,
+      "duration": 0.10759234428405762,
+      "topology": "hybrid",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'mid-b', 'task': 'research mid-b', 'order': 3}",
+        "research": "Researched {'node_id': 'mid-b', 'task': 'research mid-b', 'order': 3, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "mid-c",
       "task": "research mid-c",
+      "agent": "ResearcherAgent",
       "order": 4,
-      "start_time": 1777811928.0943155,
-      "end_time": 1777811928.20254,
-      "duration": 0.10822439193725586,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.240795,
+      "end_time": 1778509986.3483834,
+      "duration": 0.10758852958679199,
+      "topology": "hybrid",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'mid-c', 'task': 'research mid-c', 'order': 4}",
+        "research": "Researched {'node_id': 'mid-c', 'task': 'research mid-c', 'order': 4, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "exit-a",
       "task": "research exit-a",
+      "agent": "ResearcherAgent",
       "order": 5,
-      "start_time": 1777811928.2026827,
-      "end_time": 1777811928.312336,
-      "duration": 0.10965323448181152,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.3485749,
+      "end_time": 1778509986.4587064,
+      "duration": 0.11013150215148926,
+      "topology": "hybrid",
+      "level": 3,
+      "layer": 3,
       "result": {
-        "research": "Researched {'node_id': 'exit-a', 'task': 'research exit-a', 'order': 5}",
+        "research": "Researched {'node_id': 'exit-a', 'task': 'research exit-a', 'order': 5, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "exit-b",
       "task": "research exit-b",
+      "agent": "ResearcherAgent",
       "order": 6,
-      "start_time": 1777811928.2027116,
-      "end_time": 1777811928.312374,
-      "duration": 0.10966253280639648,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778509986.3486185,
+      "end_time": 1778509986.4587424,
+      "duration": 0.11012387275695801,
+      "topology": "hybrid",
+      "level": 3,
+      "layer": 3,
       "result": {
-        "research": "Researched {'node_id': 'exit-b', 'task': 'research exit-b', 'order': 6}",
+        "research": "Researched {'node_id': 'exit-b', 'task': 'research exit-b', 'order': 6, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     }
   ],
-  "critical_path_duration": 0.3187594413757324
+  "critical_path_duration": 0.32880282402038574,
+  "quality_metrics": {
+    "completeness_score": 1.0,
+    "consistency_score": 1.0,
+    "synthesis_score": 0.0,
+    "dependency_coverage_score": 1.0,
+    "overall_quality_score": 0.8
+  },
+  "robustness_metrics": {
+    "success_rate": 1.0,
+    "failed_node_count": 0,
+    "skipped_node_count": 0,
+    "retry_count_total": 0,
+    "fallback_count": 0,
+    "recovery_success_rate": 1.0,
+    "wasted_work_estimate": 0.0
+  }
 }
