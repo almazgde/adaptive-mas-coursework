@@ -6,7 +6,7 @@
     "centralized_coordinator"
   ],
   "node_count": 32,
-  "runs": 1,
+  "runs": 10,
   "worker_count": null,
   "selector_mode": "all",
   "enabled_topologies": [
@@ -19,7 +19,7 @@
   "random_seed": null,
   "quality_evaluation": true,
   "timeline_visualization": false,
-  "learned_model_path": null,
+  "learned_model_path": "results/learned_selector_model.json",
   "failure_simulation": {
     "failure_enabled": false,
     "failure_probability": 0.0,

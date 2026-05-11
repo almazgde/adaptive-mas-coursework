@@ -96,6 +96,12 @@ Use the learned selector in a benchmark:
 python run.py benchmark --selector learned_adaptive --model results/learned_selector_model.json
 ```
 
+Run the final comparison with all strategies, including learned adaptive:
+
+```bash
+python run.py benchmark --selector all --model results/learned_selector_model.json --runs 10
+```
+
 Run with failure simulation:
 
 ```bash

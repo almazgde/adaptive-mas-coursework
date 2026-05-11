@@ -48,8 +48,8 @@ Quality evaluation и robustness evaluation расширили эксперим�
 
 1. подключить real LLM backend и измерять реальные latency/cost traces;
 2. откалибровать overhead и failure model на реальных execution logs;
-3. реализовать learned selector, обучаемый на истории запусков;
-4. сравнить heuristic selector и learned selector на одинаковых benchmark suites;
+3. развить текущий learned selector от nearest-neighbor baseline к более сильной learned policy;
+4. откалибровать objective score learned selector на реальных traces;
 5. добавить online adaptation во время исполнения DAG;
 6. расширить quality evaluation с использованием human/LLM judge при наличии реальных ответов;
 7. добавить больше типов synthetic и real-world task graphs.

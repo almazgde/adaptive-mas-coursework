@@ -70,7 +70,7 @@
 3. `parallel`, если ширина велика, а плотность зависимостей низкая;
 4. `hybrid` в остальных смешанных случаях.
 
-Эта эвристика намеренно проста. Она делает выбор интерпретируемым и пригодным для анализа, но не гарантирует оптимальность. Экспериментальные результаты подтверждают это ограничение: adaptive selector корректно выбрал `parallel` для `wide_sparse` и `sequential` для `deep_dependency`, но не всегда совпал с лучшей статической стратегией по latency для `layered` и `centralized_coordinator`.
+Эта эвристика намеренно проста. Она делает выбор интерпретируемым и пригодным для анализа, но не гарантирует оптимальность. Финальные эксперименты поэтому сравнивают rule-based режим не только со static baselines, но и с cost-aware и learned adaptive selectors.
 
 ## 2.5. Execution layer
 
@@ -195,7 +195,7 @@ Benchmark/experiment сохраняет копию использованной 
 
 ## 2.13. Learned adaptive selector
 
-Следующим расширением selector layer является `learned_adaptive`. Он реализован как lightweight baseline без внешних ML-зависимостей. Вместо обучения сложной модели используется nearest-neighbor classifier по вектору признаков графа.
+Дополнительным расширением selector layer является `learned_adaptive`. Он реализован как lightweight baseline без внешних ML-зависимостей. Вместо обучения сложной модели используется nearest-neighbor classifier по вектору признаков графа.
 
 Feature vector включает:
 
