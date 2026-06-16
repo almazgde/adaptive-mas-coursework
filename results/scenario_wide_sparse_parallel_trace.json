@@ -39,82 +39,146 @@
     "leaf-4",
     "leaf-5"
   ],
-  "start_time": 1777811927.0007594,
-  "end_time": 1777811927.2232778,
-  "duration": 0.2225184440612793,
+  "start_time": 1778525240.683339,
+  "end_time": 1778525240.8953738,
+  "duration": 0.2120347023010254,
   "node_traces": [
     {
       "node_id": "root",
       "task": "plan root",
+      "agent": "PlannerAgent",
       "order": 0,
-      "start_time": 1777811927.0009503,
-      "end_time": 1777811927.1149542,
-      "duration": 0.11400389671325684,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.6834393,
+      "end_time": 1778525240.7849834,
+      "duration": 0.10154414176940918,
+      "topology": "parallel",
+      "level": 1,
+      "layer": 1,
       "result": {
-        "plan": "Planned for {'node_id': 'root', 'task': 'plan root', 'order': 0}",
+        "plan": "Planned for {'node_id': 'root', 'task': 'plan root', 'order': 0, 'attempt': 0}",
         "agent": "PlannerAgent"
       }
     },
     {
       "node_id": "leaf-1",
       "task": "research leaf 1",
+      "agent": "ResearcherAgent",
       "order": 1,
-      "start_time": 1777811927.1152165,
-      "end_time": 1777811927.2231448,
-      "duration": 0.10792827606201172,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.7851398,
+      "end_time": 1778525240.8952758,
+      "duration": 0.11013603210449219,
+      "topology": "parallel",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'leaf-1', 'task': 'research leaf 1', 'order': 1}",
+        "research": "Researched {'node_id': 'leaf-1', 'task': 'research leaf 1', 'order': 1, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "leaf-2",
       "task": "research leaf 2",
+      "agent": "ResearcherAgent",
       "order": 2,
-      "start_time": 1777811927.115269,
-      "end_time": 1777811927.2231703,
-      "duration": 0.10790133476257324,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.7851663,
+      "end_time": 1778525240.8952954,
+      "duration": 0.11012911796569824,
+      "topology": "parallel",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'leaf-2', 'task': 'research leaf 2', 'order': 2}",
+        "research": "Researched {'node_id': 'leaf-2', 'task': 'research leaf 2', 'order': 2, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "leaf-3",
       "task": "research leaf 3",
+      "agent": "ResearcherAgent",
       "order": 3,
-      "start_time": 1777811927.115294,
-      "end_time": 1777811927.223182,
-      "duration": 0.10788798332214355,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.7851999,
+      "end_time": 1778525240.8953032,
+      "duration": 0.11010336875915527,
+      "topology": "parallel",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'leaf-3', 'task': 'research leaf 3', 'order': 3}",
+        "research": "Researched {'node_id': 'leaf-3', 'task': 'research leaf 3', 'order': 3, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "leaf-4",
       "task": "research leaf 4",
+      "agent": "ResearcherAgent",
       "order": 4,
-      "start_time": 1777811927.1153128,
-      "end_time": 1777811927.2231922,
-      "duration": 0.1078794002532959,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.7852287,
+      "end_time": 1778525240.895309,
+      "duration": 0.11008024215698242,
+      "topology": "parallel",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'leaf-4', 'task': 'research leaf 4', 'order': 4}",
+        "research": "Researched {'node_id': 'leaf-4', 'task': 'research leaf 4', 'order': 4, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "leaf-5",
       "task": "research leaf 5",
+      "agent": "ResearcherAgent",
       "order": 5,
-      "start_time": 1777811927.1153357,
-      "end_time": 1777811927.2232022,
-      "duration": 0.10786652565002441,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.785239,
+      "end_time": 1778525240.8953307,
+      "duration": 0.1100916862487793,
+      "topology": "parallel",
+      "level": 2,
+      "layer": 2,
       "result": {
-        "research": "Researched {'node_id': 'leaf-5', 'task': 'research leaf 5', 'order': 5}",
+        "research": "Researched {'node_id': 'leaf-5', 'task': 'research leaf 5', 'order': 5, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     }
   ],
-  "critical_path_duration": 0.22193217277526855
+  "critical_path_duration": 0.21168017387390137,
+  "quality_metrics": {
+    "completeness_score": 1.0,
+    "consistency_score": 1.0,
+    "synthesis_score": 0.0,
+    "dependency_coverage_score": 1.0,
+    "overall_quality_score": 0.8
+  },
+  "robustness_metrics": {
+    "success_rate": 1.0,
+    "failed_node_count": 0,
+    "skipped_node_count": 0,
+    "retry_count_total": 0,
+    "fallback_count": 0,
+    "recovery_success_rate": 1.0,
+    "wasted_work_estimate": 0.0
+  }
 }

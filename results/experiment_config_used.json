@@ -1,0 +1,32 @@
+{
+  "graph_types": [
+    "wide_sparse",
+    "deep_dependency",
+    "layered",
+    "centralized_coordinator"
+  ],
+  "node_count": 32,
+  "runs": 10,
+  "worker_count": null,
+  "selector_mode": "all",
+  "enabled_topologies": [
+    "sequential",
+    "parallel",
+    "hierarchical",
+    "hybrid"
+  ],
+  "output_dir": "results",
+  "random_seed": null,
+  "quality_evaluation": true,
+  "timeline_visualization": false,
+  "learned_model_path": "results/learned_selector_model.json",
+  "failure_simulation": {
+    "failure_enabled": false,
+    "failure_probability": 0.0,
+    "timeout_probability": 0.0,
+    "empty_result_probability": 0.0,
+    "max_retries": 0,
+    "timeout_seconds": 1.0,
+    "fallback_enabled": false
+  }
+}

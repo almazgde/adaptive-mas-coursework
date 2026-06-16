@@ -44,94 +44,166 @@
     "task-5",
     "task-6"
   ],
-  "start_time": 1777811927.2293642,
-  "end_time": 1777811927.9872837,
-  "duration": 0.7579195499420166,
+  "start_time": 1778525240.9028766,
+  "end_time": 1778525241.654094,
+  "duration": 0.7512173652648926,
   "node_traces": [
     {
       "node_id": "task-0",
       "task": "plan step 0",
+      "agent": "PlannerAgent",
       "order": 0,
-      "start_time": 1777811927.2293758,
-      "end_time": 1777811927.3312714,
-      "duration": 0.10189557075500488,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525240.902901,
+      "end_time": 1778525241.0044456,
+      "duration": 0.10154461860656738,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "plan": "Planned for {'node_id': 'task-0', 'task': 'plan step 0', 'order': 0}",
+        "plan": "Planned for {'node_id': 'task-0', 'task': 'plan step 0', 'order': 0, 'attempt': 0}",
         "agent": "PlannerAgent"
       }
     },
     {
       "node_id": "task-1",
       "task": "research step 1",
+      "agent": "ResearcherAgent",
       "order": 1,
-      "start_time": 1777811927.3312924,
-      "end_time": 1777811927.4418967,
-      "duration": 0.11060428619384766,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.004495,
+      "end_time": 1778525241.112015,
+      "duration": 0.10752010345458984,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-1', 'task': 'research step 1', 'order': 1}",
+        "research": "Researched {'node_id': 'task-1', 'task': 'research step 1', 'order': 1, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "task-2",
       "task": "research step 2",
+      "agent": "ResearcherAgent",
       "order": 2,
-      "start_time": 1777811927.4419072,
-      "end_time": 1777811927.5507224,
-      "duration": 0.10881519317626953,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.1120563,
+      "end_time": 1778525241.2200112,
+      "duration": 0.1079549789428711,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-2', 'task': 'research step 2', 'order': 2}",
+        "research": "Researched {'node_id': 'task-2', 'task': 'research step 2', 'order': 2, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "task-3",
       "task": "research step 3",
+      "agent": "ResearcherAgent",
       "order": 3,
-      "start_time": 1777811927.5507474,
-      "end_time": 1777811927.6602602,
-      "duration": 0.1095128059387207,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.2200527,
+      "end_time": 1778525241.3293445,
+      "duration": 0.10929179191589355,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-3', 'task': 'research step 3', 'order': 3}",
+        "research": "Researched {'node_id': 'task-3', 'task': 'research step 3', 'order': 3, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "task-4",
       "task": "research step 4",
+      "agent": "ResearcherAgent",
       "order": 4,
-      "start_time": 1777811927.6602817,
-      "end_time": 1777811927.769696,
-      "duration": 0.10941433906555176,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.3293982,
+      "end_time": 1778525241.438081,
+      "duration": 0.10868287086486816,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-4', 'task': 'research step 4', 'order': 4}",
+        "research": "Researched {'node_id': 'task-4', 'task': 'research step 4', 'order': 4, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "task-5",
       "task": "research step 5",
+      "agent": "ResearcherAgent",
       "order": 5,
-      "start_time": 1777811927.769714,
-      "end_time": 1777811927.8802223,
-      "duration": 0.11050820350646973,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.4381099,
+      "end_time": 1778525241.546391,
+      "duration": 0.10828113555908203,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-5', 'task': 'research step 5', 'order': 5}",
+        "research": "Researched {'node_id': 'task-5', 'task': 'research step 5', 'order': 5, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     },
     {
       "node_id": "task-6",
       "task": "research step 6",
+      "agent": "ResearcherAgent",
       "order": 6,
-      "start_time": 1777811927.880238,
-      "end_time": 1777811927.9872718,
-      "duration": 0.10703372955322266,
+      "status": "success",
+      "retry_count": 0,
+      "error_message": null,
+      "used_fallback": false,
+      "start_time": 1778525241.5464258,
+      "end_time": 1778525241.6540818,
+      "duration": 0.10765600204467773,
+      "topology": "sequential",
+      "level": null,
+      "layer": null,
       "result": {
-        "research": "Researched {'node_id': 'task-6', 'task': 'research step 6', 'order': 6}",
+        "research": "Researched {'node_id': 'task-6', 'task': 'research step 6', 'order': 6, 'attempt': 0}",
         "agent": "ResearcherAgent"
       }
     }
   ],
-  "critical_path_duration": 0.7577841281890869
+  "critical_path_duration": 0.7509315013885498,
+  "quality_metrics": {
+    "completeness_score": 1.0,
+    "consistency_score": 1.0,
+    "synthesis_score": 0.0,
+    "dependency_coverage_score": 1.0,
+    "overall_quality_score": 0.8
+  },
+  "robustness_metrics": {
+    "success_rate": 1.0,
+    "failed_node_count": 0,
+    "skipped_node_count": 0,
+    "retry_count_total": 0,
+    "fallback_count": 0,
+    "recovery_success_rate": 1.0,
+    "wasted_work_estimate": 0.0
+  }
 }

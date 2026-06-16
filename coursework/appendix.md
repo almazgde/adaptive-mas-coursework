@@ -5,77 +5,113 @@
 ```text
 adaptive_mas/
   agents/
-    mock_agents.py
   dag/
-    node.py
-    edge.py
-    dag.py
   execution/
-    executor.py
+  evaluation/
   metrics/
-    graph_metrics.py
   topology/
-    selector.py
 
 experiments/
   benchmarks/
-    synthetic_graphs.py
-    runner.py
+
+configs/
+  experiment_default.json
+
+tests/
+  test_*.py
+
+run.py
+demo.py
+visualize_results.py
+visualize_execution_timeline.py
 
 results/
   benchmark_results.csv
   benchmark_summary.csv
-  latency_comparison.png
-  topology_efficiency.png
-  adaptive_vs_static.png
-  critical_path_impact.png
+  learned_selector_model.json
+  experiment_config_used.json
+  *.png
+  *.json
 ```
 
-## Приложение Б. Команды запуска экспериментов
+## Приложение Б. Команды запуска
 
 ```powershell
-.\.venv\Scripts\python.exe run_benchmarks.py
-.\.venv\Scripts\python.exe visualize_results.py
+python demo.py
+python run.py demo
+python run.py benchmark --runs 1
+python run.py train-selector --runs 100 --output results/learned_selector_model.json
+python run.py benchmark --selector learned_adaptive --model results/learned_selector_model.json --runs 10
+python run.py benchmark --selector all --model results/learned_selector_model.json --runs 10
+python run.py visualize --trace results/execution_trace.json
+python run.py experiment --config configs/experiment_default.json --runs 5 --random-seed 7
 ```
 
-## Приложение В. Поля `benchmark_results.csv`
+## Приложение В. Основные поля `benchmark_results.csv`
 
 | Поле | Содержание |
 |---|---|
-| `run_id` | номер repeated run |
-| `strategy_group` | static или adaptive |
-| `requested_topology` | запрошенная стратегия |
-| `topology` | фактически выбранная топология |
-| `graph_type` | категория synthetic graph |
-| `node_count` | число узлов |
-| `edge_count` | число рёбер |
-| `graph_depth` | глубина DAG |
-| `critical_path_length` | длина критического пути |
-| `execution_latency` | итоговая задержка исполнения |
-| `critical_path_latency` | latency критического пути |
-| `execution_cost` | synthetic execution cost |
-| `parallel_efficiency` | эффективность относительно critical path |
-| `coordination_overhead` | накладные расходы координации |
-| `executor_utilization` | использование executor capacity |
+| `run_id` | Номер repeated run |
+| `graph_type` | Категория synthetic graph |
+| `strategy` | Strategy label для анализа |
+| `selector_mode` | Static, rule-based, cost-aware или learned adaptive mode |
+| `requested_topology` | Запрошенная topology или adaptive mode |
+| `selected_topology` | Фактически выбранная topology |
+| `learned_model_used` | Путь к JSON-модели learned selector, если применимо |
+| `objective_score` | Objective score выбранной стратегии, если применимо |
+| `node_count` | Число узлов DAG |
+| `edge_count` | Число ребер DAG |
+| `graph_depth` | Глубина DAG |
+| `parallel_width` | Максимальная ширина DAG |
+| `density` | Плотность графа |
+| `execution_latency` / `latency` | Итоговая задержка исполнения |
+| `execution_cost` / `cost` | Synthetic execution cost |
+| `coordination_overhead` | Накладные расходы coordination layer |
+| `parallel_efficiency` | Эффективность относительно critical path |
+| `overall_quality_score` | Итоговая heuristic quality score |
+| `success_rate` | Доля успешно выполненных узлов |
 
-## Приложение Г. Сводная таблица adaptive vs best static
+## Приложение Г. Weighted, quality и robustness поля
 
-| Graph type | Adaptive selected | Adaptive latency | Best static | Best static latency |
-|---|---|---:|---|---:|
-| wide_sparse | parallel | 0.56404 | parallel | 0.56404 |
-| deep_dependency | sequential | 1.84883 | sequential | 1.84883 |
-| layered | hybrid | 0.67070 | parallel | 0.641033 |
-| centralized_coordinator | hierarchical | 0.66837 | parallel | 0.541673 |
+| Поле | Содержание |
+|---|---|
+| `total_node_cost` | Суммарная стоимость узлов DAG |
+| `avg_node_cost` | Средняя стоимость узла |
+| `max_node_cost` | Максимальная стоимость узла |
+| `cost_variance` | Разброс стоимости узлов |
+| `weighted_critical_path` | Максимальная суммарная стоимость пути |
+| `weighted_parallel_width` | Максимальная суммарная стоимость одного уровня |
+| `completeness_score` | Полнота выполнения DAG |
+| `consistency_score` | Штрафует failed, skipped, empty и fallback results |
+| `synthesis_score` | Наличие synthesis/aggregate step |
+| `dependency_coverage_score` | Соблюдение dependency constraints |
+| `failed_node_count` | Число failed/timeout nodes |
+| `skipped_node_count` | Число nodes, пропущенных из-за failed predecessors |
+| `retry_count_total` | Суммарное число retry |
+| `fallback_count` | Число fallback results |
+| `recovery_success_rate` | Доля успешно восстановленных failures |
+| `wasted_work_estimate` | Оценка работы, потраченной на неуспешные попытки |
 
-## Приложение Д. Перечень графиков
+## Приложение Д. Графики и trace files
 
 | Файл | Назначение |
 |---|---|
-| `results/latency_comparison.png` | сравнение latency по topology и graph type |
-| `results/topology_efficiency.png` | сравнение parallel efficiency |
-| `results/adaptive_vs_static.png` | сравнение adaptive и static strategies |
-| `results/critical_path_impact.png` | влияние critical path latency на total latency |
-| `results/graph_wide_sparse.png` | структура wide sparse graph |
-| `results/graph_deep_dependency.png` | структура deep dependency graph |
-| `results/graph_layered.png` | структура layered graph |
-| `results/graph_centralized_coordinator.png` | структура centralized coordinator graph |
+| `results/latency_comparison.png` | Сравнение latency по topology и graph type |
+| `results/topology_efficiency.png` | Сравнение parallel efficiency |
+| `results/adaptive_vs_static.png` | Сравнение adaptive и static strategies |
+| `results/critical_path_impact.png` | Связь critical path latency и total latency |
+| `results/timeline_<trace>_<topology>.png` | Gantt chart execution timeline |
+| `results/execution_trace.json` | Trace последнего demo/run |
+| `results/scenario_*_trace.json` | Trace отдельных demo scenarios |
+
+## Приложение Е. Тестирование
+
+```powershell
+$env:PYTHONDONTWRITEBYTECODE='1'; python -m unittest discover -s tests
+```
+
+Тесты проверяют DAG operations, graph metrics, weighted metrics, topology selector, learned selector, executors, execution traces, quality evaluation, failure recovery, benchmark CSV generation, CLI smoke scenarios и reproducibility checks.
+
+## Приложение Ж. Интерпретация результатов
+
+Актуальные численные результаты следует брать из `results/benchmark_summary.csv`. В приложении не фиксируются вручную старые значения latency, потому что они зависят от текущей реализации, seed, числа runs, node count и выбранной конфигурации. Learned selector следует рассматривать как lightweight baseline, обученный на synthetic benchmark data; он не гарантирует превосходство над static или cost-aware strategies во всех сценариях.
