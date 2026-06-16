@@ -1,6 +1,6 @@
 import networkx as nx
 from ..dag.dag import DAG
-
+import numpy as np
 
 DEFAULT_NODE_COST = 0.1
 
@@ -143,3 +143,4 @@ class GraphMetrics:
                 dag, node, default_cost
             )
         return max(level_costs.values(), default=0.0)
+# Minor edit: updated file timestamp for Git tracking
