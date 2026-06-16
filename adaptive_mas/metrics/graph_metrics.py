@@ -1,6 +1,5 @@
 import networkx as nx
 from ..dag.dag import DAG
-import numpy as np
 
 DEFAULT_NODE_COST = 0.1
 
